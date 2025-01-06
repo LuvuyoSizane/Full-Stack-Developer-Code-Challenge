@@ -1,0 +1,6 @@
+﻿services:
+  fullstackchallengeapi:
+    image: fullstackchallengeapi
+    build:
+      context: .
+      dockerfile: FullStackChallengeAPI/Dockerfile

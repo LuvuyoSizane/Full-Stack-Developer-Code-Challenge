@@ -1,3 +1,4 @@
+using FullStackChallengeAPI.Data.DTO;
 using FullStackChallengeAPI.Data.Interfaces;
 using FullStackChallengeAPI.Data.Utilities;
 using FullStackChallengeAPI.Entity;
@@ -19,18 +20,20 @@ public class UserRepository : IUserRepository<User>
     public async Task<User> RegisterAsync(User user)
     {
         // Check if email already exists
-        var existingUser = await _context.Users
-                                         .FirstOrDefaultAsync(u => u.Email == user.Email);
+        var existingUser = await _context.users
+                                         .FirstOrDefaultAsync(u => u.email == user.email);
         if (existingUser != null)
         {
             throw new InvalidOperationException("Email is already taken.");
         }
 
+        user.id = new Guid();
+        
         // Hash the password
-        user.Password = HashPassword(user.Password);
+        user.password = HashPassword(user.password);
 
         // Add the user to the database
-        _context.Users.Add(user);
+        _context.users.Add(user);
         await _context.SaveChangesAsync();
 
         return user;
@@ -39,18 +42,18 @@ public class UserRepository : IUserRepository<User>
     // Update user information
     public async Task<Guid> UpdateAsync(User user)
     {
-        _context.Users.Update(user);
+        _context.users.Update(user);
         await _context.SaveChangesAsync();
 
-        return user.Id;
+        return user.id;
     }
 
     // Login user and return a JWT token if successful
-    public async Task<string?> LoginAsync(string email, string password)
+    public async Task<string?> LoginAsync(LoginRequestDTO login)
     {
-        var user = await _context.Users
-                                  .FirstOrDefaultAsync(u => u.Email == email);
-        if (user == null || !VerifyPassword(password, user.Password))
+        var user = await _context.users
+                                  .FirstOrDefaultAsync(u => u.email == login.Email);
+        if (user == null || !VerifyPassword(login.Password, user.password))
         {
             return null; // Invalid credentials
         }

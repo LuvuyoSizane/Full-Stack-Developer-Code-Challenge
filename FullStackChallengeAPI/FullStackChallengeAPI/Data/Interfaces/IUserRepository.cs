@@ -1,3 +1,5 @@
+using FullStackChallengeAPI.Data.DTO;
+
 namespace FullStackChallengeAPI.Data.Interfaces;
 
 public interface IUserRepository<T>
@@ -6,5 +8,5 @@ public interface IUserRepository<T>
     Task<T> RegisterAsync(T entity);
 
     // Login a user and return a JWT token or null if authentication fails
-    Task<string?> LoginAsync(string email, string password);
+    Task<string?> LoginAsync(LoginRequestDTO login);
 }

@@ -20,20 +20,19 @@ public class UserRepository : IUserRepository<User>
     public async Task<User> RegisterAsync(User user)
     {
         // Check if email already exists
-        var existingUser = await _context.users
-                                         .FirstOrDefaultAsync(u => u.email == user.email);
+        var existingUser = await _context.Users
+                                         .FirstOrDefaultAsync(u => u.Email == user.Email);
         if (existingUser != null)
         {
             throw new InvalidOperationException("Email is already taken.");
         }
 
-        user.id = new Guid();
-        
+        user.Id = new Guid();
         // Hash the password
-        user.password = HashPassword(user.password);
+        user.Password = HashPassword(user.Password);
 
         // Add the user to the database
-        _context.users.Add(user);
+        _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
         return user;
@@ -42,26 +41,26 @@ public class UserRepository : IUserRepository<User>
     // Update user information
     public async Task<Guid> UpdateAsync(User user)
     {
-        _context.users.Update(user);
+        _context.Users.Update(user);
         await _context.SaveChangesAsync();
 
-        return user.id;
+        return user.Id;
     }
 
     // Login user and return a JWT token if successful
-    public async Task<string?> LoginAsync(LoginRequestDTO login)
+    public async Task<User?> LoginAsync(LoginRequestDTO login)
     {
-        var user = await _context.users
-                                  .FirstOrDefaultAsync(u => u.email == login.Email);
-        if (user == null || !VerifyPassword(login.Password, user.password))
+        var user = await _context.Users
+                                  .FirstOrDefaultAsync(u => u.Email == login.Email);
+        if (user == null || VerifyPassword(HashPassword(login.Password), user.Password))
         {
             return null; // Invalid credentials
         }
 
         // Return JWT token (you'd generate the token here)
-        var token = GenerateJwtToken(user);
+        //    var token = GenerateJwtToken(user);
 
-        return token;
+        return user;
     }
 
     // Helper method to hash password (you can use bcrypt or Argon2 instead)
@@ -95,9 +94,9 @@ public class UserRepository : IUserRepository<User>
     }
 
     // Generate JWT token (this is just an example, you'd need to implement JWT creation)
-    private string GenerateJwtToken(User user)
-    {
-        // Implement JWT token generation here (using libraries like System.IdentityModel.Tokens.Jwt)
-        return "generated-jwt-token"; // Placeholder
-    }
+    // private string GenerateJwtToken(User user)
+    // {
+    //     // Implement JWT token generation here (using libraries like System.IdentityModel.Tokens.Jwt)
+    //     return "generated-jwt-token"; // Placeholder
+    // }
 }

@@ -23,7 +23,7 @@ builder.Services.AddScoped<IUserRepository <User>, UserRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
-        builder => builder.WithOrigins("http://localhost:3000") // Replace with your React app's URL
+        builder => builder.WithOrigins("http://localhost:4200") // Replace with your React app's URL
                           .AllowAnyHeader()
                           .AllowAnyMethod());
 });

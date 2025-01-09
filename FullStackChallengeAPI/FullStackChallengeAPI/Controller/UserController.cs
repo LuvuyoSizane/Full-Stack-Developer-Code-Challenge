@@ -83,7 +83,7 @@ namespace FullStackChallengeAPI.Controller;
             }
             catch (Exception ex)
             {
-                // Handle other types of errors (database, service issues, etc.)
+                // Handle  other types of errors (database, service issues, etc.)
                 return StatusCode(500, new { error = ex.Message });
             }
         }

@@ -23,6 +23,7 @@ public class User
     [EmailAddress]
     [Required]
     public string? Email { get; set; }
+    [MinLength(10)]
     public string? Mobile { get; set; } 
     [Required]
     [MinLength(6)]
